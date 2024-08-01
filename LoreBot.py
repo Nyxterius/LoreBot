@@ -13,4 +13,4 @@ client = discord.Client(intents=intents)
 
 
 
-client.run('MTI2ODM1NzczMzU4MTg1Mjc1NQ.GIydvs._4A98XQuKD9uPpK8jG7cS5yETiqynRCPzm-yZM')
+client.run('token')
