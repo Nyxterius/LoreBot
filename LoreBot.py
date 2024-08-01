@@ -14,7 +14,7 @@ intents.presences = False
 client = discord.Client(intents=intents)
 
 class Searcher():
-    def stdgame(game):
+    async def stdgame(game):
         '''Takes game input and standardizes it across naming schemes'''
         if game.lower() == "skyrim" or "morrowind" or "oblivion" or "eso" or "elder scrolls online" or "daggerfall" or "elder scrolls" or "arena" or "the elder scrolls":
             game = "elder scrolls"
@@ -22,7 +22,7 @@ class Searcher():
         else:
             return game
 
-    def query(game, topic):
+    async def query(game, topic):
         '''Takes game and topic input and returns the first search result
         Args:
             game (str): the game that is being searched
@@ -38,27 +38,27 @@ class Searcher():
         data = requests.get(str(result))
         return data
     
-    def scrapefandom(data):
+    async def scrapefandom(data):
         soup = BS(data, 'html.parser')
         soup.prettify()
         text = soup.find('div', {"class=\"mw-parser-output\""}).get_text()
     
-    def scrapeuesp(data):
+    async def scrapeuesp(data):
         soup = BS(data, 'html.parser')
         soup.prettify()
         text = soup.find('p').get_text()
 
-bot = commands.Bot(command_prefix='/', intents=intents)
-@bot.command()
-async def search(ctx, game: str, topic: str):
+
+bot = commands.Bot(command_prefix='?', intents=discord.Intents.all())
+
+@bot.hybrid_command(name="search")
+async def search(ctx, game, topic):
     await ctx.send(f"Searching {game}'s wiki for {topic}.")
     game = Searcher.stdgame(game)
     if game == "elder scrolls":
         resultText = Searcher.scrapeuesp(Searcher.query(game, topic))
     else:
         resultText = Searcher.scrapefandom(Searcher.query(game, topic))
-    await ctx.send(f"{resultText[:-1]}\n{Searcher.query().result}")
+    await ctx.send(f"{str(resultText)[:-1]}\n{Searcher.query().result}")
 
-
-
-client.run('token')
+bot.run('token')
