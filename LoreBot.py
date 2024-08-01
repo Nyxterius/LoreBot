@@ -7,11 +7,13 @@ from bs4 import BeautifulSoup as BS
 
 http = urllib.PoolManager()
 
-intents = discord.Intents.default()
+intents = discord.Intents(messages=True)
 intents.message_content = True
+intents.typing = False
+intents.presences = False
 client = discord.Client(intents=intents)
 
-class Searcher(commands):
+class Searcher():
     def stdgame(game):
         '''Takes game input and standardizes it across naming schemes'''
         if game.lower() == "skyrim" or "morrowind" or "oblivion" or "eso" or "elder scrolls online" or "daggerfall" or "elder scrolls" or "arena" or "the elder scrolls":
