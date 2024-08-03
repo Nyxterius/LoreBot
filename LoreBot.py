@@ -1,9 +1,14 @@
+#discord imports
 import discord
-import requests
-import urllib3 as urllib
+from discord import app_commands
 from discord.ext import commands
+import requests
+#other imports
+import urllib3 as urllib
 from googlesearch import search
 from bs4 import BeautifulSoup as BS
+from dotenv import load_dotenv
+import os
 
 http = urllib.PoolManager()
 
@@ -51,14 +56,24 @@ class Searcher():
 
 bot = commands.Bot(command_prefix='?', intents=discord.Intents.all())
 
-@bot.hybrid_command(name="search")
-async def search(ctx, game, topic):
-    await ctx.send(f"Searching {game}'s wiki for {topic}.")
+@bot.event
+async def on_ready():
+    print("Bot is workin")
+    try:
+        synced = await bot.tree.sync()
+        print(f"{len(synced)} commands.")
+    except Exception as e:
+        print(e)
+
+@bot.tree.command(name="search")
+@app_commands.describe(game = "What game or IP to search for?", topic = "What topic did you have in mind?")
+async def search(interaction: discord.Interaction, game: str, topic: str):
+    await interaction.response.send_message(f"Searching {game}'s wiki for {topic}.")
     game = Searcher.stdgame(game)
     if game == "elder scrolls":
         resultText = Searcher.scrapeuesp(Searcher.query(game, topic))
     else:
         resultText = Searcher.scrapefandom(Searcher.query(game, topic))
-    await ctx.send(f"{str(resultText)[:-1]}\n{Searcher.query().result}")
+    await interaction.response.send_message(f"{str(resultText)[:-1]}\n{Searcher.query().result}")
 
-bot.run('token')
+bot.run(os.getenv('DISCORD_TOKEN'))
