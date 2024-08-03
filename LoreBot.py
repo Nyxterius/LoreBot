@@ -5,11 +5,12 @@ from discord.ext import commands
 import requests
 #other imports
 import urllib3 as urllib
-from googlesearch import search
+from googlesearch import lucky as gsearch
 from bs4 import BeautifulSoup as BS
 from dotenv import load_dotenv
 import os
 
+load_dotenv()
 http = urllib.PoolManager()
 
 intents = discord.Intents(messages=True)
@@ -36,22 +37,24 @@ class Searcher():
         Returns:
             parg (str): first paragraph inside of body in result page
         '''
+        global result
+        result = ""
         if game == "elder scrolls":
-            result = search(f"{game} UESP {topic}", tld='co.in', num = 1, stop = 1)
+            result = gsearch(f"{game} UESP {topic}", tld='com', lang='en')
         else:
-            result = search(f"{game} {topic}", tld='co.in', num = 1, stop = 1)
+            result = gsearch(f"{game} {topic}", tld='com', lang='en')
         data = requests.get(str(result))
         return data
     
     async def scrapefandom(data):
-        soup = BS(data, 'html.parser')
+        soup = BS(f"https://{data}", 'html.parser')
         soup.prettify()
-        text = soup.find('div', {"class=\"mw-parser-output\""}).get_text()
+        #text = soup.find('div', {"class=\"mw-parser-output\""}).get_text()
     
     async def scrapeuesp(data):
-        soup = BS(data, 'html.parser')
+        soup = BS(f"https://{data}", 'html.parser')
         soup.prettify()
-        text = soup.find('p').get_text()
+        #text = soup.find('p').get_text()
 
 
 bot = commands.Bot(command_prefix='?', intents=discord.Intents.all())
@@ -68,12 +71,12 @@ async def on_ready():
 @bot.tree.command(name="search")
 @app_commands.describe(game = "What game or IP to search for?", topic = "What topic did you have in mind?")
 async def search(interaction: discord.Interaction, game: str, topic: str):
-    await interaction.response.send_message(f"Searching {game}'s wiki for {topic}.")
-    game = Searcher.stdgame(game)
+    #await interaction.response.send_message(f"Searching {game}'s wiki for {topic}.")
+    game = await Searcher.stdgame(game)
     if game == "elder scrolls":
-        resultText = Searcher.scrapeuesp(Searcher.query(game, topic))
+        resultText = await Searcher.scrapeuesp(await Searcher.query(game, topic))
     else:
-        resultText = Searcher.scrapefandom(Searcher.query(game, topic))
-    await interaction.response.send_message(f"{str(resultText)[:-1]}\n{Searcher.query().result}")
+        resultText = await Searcher.scrapefandom(await Searcher.query(game, topic))
+    await interaction.response.send_message(f"Here's lore on {topic}!\n{result}")
 
 bot.run(os.getenv('DISCORD_TOKEN'))
