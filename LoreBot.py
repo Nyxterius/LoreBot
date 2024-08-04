@@ -2,14 +2,15 @@
 import discord
 from discord import app_commands
 from discord.ext import commands
-import requests
 #other imports
+import requests
 import urllib3 as urllib
 from googlesearch import lucky as gsearch
 from bs4 import BeautifulSoup as BS
 from dotenv import load_dotenv
 import os
 import google.generativeai as genai
+from google.generativeai.types import HarmCategory, HarmBlockThreshold
 import asyncio
 
 load_dotenv()
@@ -77,7 +78,12 @@ async def search(interaction: discord.Interaction, game: str, topic: str):
     await interaction.response.defer()
     await Searcher.query(game, topic)
     await asyncio.sleep(4)
-    response = model.generate_content(f"Give a brief 50 word or less synopsis on {topic} from {game}.")
+    response = model.generate_content(f"Give a semi-detailed, approximately 100 word synopsis on {topic} from {game}.", safety_settings={
+        HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_ONLY_HIGH,
+        HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_ONLY_HIGH,
+        HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_ONLY_HIGH,
+        HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: HarmBlockThreshold.BLOCK_ONLY_HIGH
+    })
     await interaction.followup.send(f"Here's the lore on {topic}!\n{response.text}{result}")
 
 @bot.tree.command(name="help")
