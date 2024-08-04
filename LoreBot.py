@@ -51,6 +51,7 @@ bot = commands.Bot(command_prefix='?', intents=discord.Intents.all())
 @bot.event
 async def on_ready():
     print("Bot is workin")
+    await bot.change_presence(activity=discord.Streaming(name="Use /help to learn how to search with LoreBot", url="https://en.uesp.net/wiki/Main_Page"))
     try:
         synced = await bot.tree.sync()
         print(f"{len(synced)} commands.")
