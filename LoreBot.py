@@ -50,6 +50,12 @@ bot = commands.Bot(command_prefix='?', intents=discord.Intents.all())
 
 @bot.event
 async def on_ready():
+    '''Completes instructions on start
+    
+    The bot prints that it is working into the terminal output, lists the number of commands synced, or raises an exception if something went wrong.
+    Changes presence to Streaming and a message to use the help command
+    
+    '''
     print("Bot is workin")
     await bot.change_presence(activity=discord.Streaming(name="Use /help to learn how to search with LoreBot", url="https://en.uesp.net/wiki/Main_Page"))
     try:
@@ -61,6 +67,13 @@ async def on_ready():
 @bot.tree.command(name="search")
 @app_commands.describe(game = "What game or IP to search for?", topic = "What topic did you have in mind?")
 async def search(interaction: discord.Interaction, game: str, topic: str):
+    '''Searches for game and topic on google calling the Searcher class's query function, which uses the googlesearch module.
+    
+    Also calls an implementation of Google's Gemini LLM to provide a brief synopsis on the topic.
+    
+    Returns:
+        A string containing the AI synopsis and url pulled from google
+    '''
     await interaction.response.defer()
     await Searcher.query(game, topic)
     await asyncio.sleep(4)
@@ -69,6 +82,7 @@ async def search(interaction: discord.Interaction, game: str, topic: str):
 
 @bot.tree.command(name="help")
 async def help(interaction: discord.Interaction):
+    '''Sends usageString, contained in a different document called usage.txt'''
     await interaction.response.send_message(usageString)
 
 bot.run(os.getenv('DISCORD_TOKEN'))
