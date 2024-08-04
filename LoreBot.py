@@ -23,6 +23,9 @@ intents.typing = False
 intents.presences = False
 client = discord.Client(intents=intents)
 
+with open('usage.txt') as usage:
+    usageString = usage.read()
+
 class Searcher():
     async def query(game, topic):
         '''Takes game and topic input and returns the first search result
@@ -59,8 +62,12 @@ async def on_ready():
 async def search(interaction: discord.Interaction, game: str, topic: str):
     await interaction.response.defer()
     await Searcher.query(game, topic)
-    await asyncio.sleep(5)
+    await asyncio.sleep(4)
     response = model.generate_content(f"Give a brief 50 word or less synopsis on {topic} from {game}.")
     await interaction.followup.send(f"Here's the lore on {topic}!\n{response.text}{result}")
+
+@bot.tree.command(name="help")
+async def help(interaction: discord.Interaction):
+    await interaction.response.send_message(usageString)
 
 bot.run(os.getenv('DISCORD_TOKEN'))

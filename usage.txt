@@ -1,0 +1,9 @@
+This is the help command for LoreBot
+
+**Search usage:**
+
+*search syntax - ```/search game: topic: ```*
+
+- search for the game you want to access, and the topic in that game that you'd like to know about!
+- for games in a series, you'll want to use just the name of the series. (eg. for oblivion write 'the elder scrolls', or for metal gear rising revengeance write 'metal gear', or for sims 4 write 'the sims')
+- the bot takes a couple seconds to complete searches, as it is accessing a google search and prompting gemini AI.
