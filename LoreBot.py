@@ -3,6 +3,7 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 #other imports
+from History import requestHistory
 import requests
 import urllib3 as urllib
 from googlesearch import lucky as gsearch
@@ -23,6 +24,8 @@ intents.message_content = True
 intents.typing = False
 intents.presences = False
 client = discord.Client(intents=intents)
+
+rq = requestHistory()
 
 with open('usage.txt') as usage:
     usageString = usage.read()
@@ -78,17 +81,23 @@ async def search(interaction: discord.Interaction, game: str, topic: str):
     await interaction.response.defer()
     await Searcher.query(game, topic)
     await asyncio.sleep(4)
-    response = model.generate_content(f"Give a semi-detailed, approximately 100 word synopsis on {topic} from {game}.", safety_settings={
+    response = model.generate_content(f"Give a general, approximately 30 word synopsis on {topic} from {game}.", safety_settings={
         HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_ONLY_HIGH,
         HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_ONLY_HIGH,
         HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_ONLY_HIGH,
         HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: HarmBlockThreshold.BLOCK_ONLY_HIGH
     })
+    rq.store(game, topic, response.text, result)
     await interaction.followup.send(f"Here's the lore on {topic}!\n{response.text}{result}")
 
 @bot.tree.command(name="help")
 async def help(interaction: discord.Interaction):
     '''Sends usageString, contained in a different document called usage.txt'''
     await interaction.response.send_message(usageString)
+
+@bot.tree.command(name="history")
+async def help(interaction: discord.Interaction):
+    '''Sends cross-server request history! History list resets every 30 entries'''
+    await interaction.response.send_message(rq.returnHistory())
 
 bot.run(os.getenv('DISCORD_TOKEN'))
