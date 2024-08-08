@@ -10,7 +10,7 @@ class requestHistory():
         print(f"{self.countID} entries.")
         self.countID += 1
         self.fields.pop(0)
-        if len(self.histDict) > 30:
+        if len(self.histDict) > 6:
             self.histDict.clear()
             self.countID = 1
 

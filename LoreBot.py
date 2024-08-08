@@ -97,7 +97,7 @@ async def help(interaction: discord.Interaction):
 
 @bot.tree.command(name="history")
 async def help(interaction: discord.Interaction):
-    '''Sends cross-server request history! History list resets every 30 entries'''
+    '''Sends cross-server request history! History list resets every 6 entries'''
     await interaction.response.send_message(rq.returnHistory())
 
 bot.run(os.getenv('DISCORD_TOKEN'))
