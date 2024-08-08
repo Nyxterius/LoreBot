@@ -1,5 +1,3 @@
-import sqlite3 as sql
-
 class requestHistory():
     def __init__(self):
         self.histDict = {}
