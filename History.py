@@ -9,11 +9,12 @@ class requestHistory():
     def store(self, game, topic, response, result):
         self.fields.append((f"**{game}: {topic}**", response, f"<{result}>"))
         self.histDict.update({self.countID : self.fields[0]})
-        print(self.countID)
+        print(f"{self.countID} entries.")
         self.countID += 1
         self.fields.pop(0)
         if len(self.histDict) > 30:
             self.histDict.clear()
+            self.countID = 1
 
     def returnHistory(self):
         return self.histDict.items()
