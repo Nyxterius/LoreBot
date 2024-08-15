@@ -48,7 +48,29 @@ class Searcher():
             result = gsearch(f"{game} {topic} wiki", tld='com', lang='en')
         data = requests.get(str(result))
         return data
+    
+class questionQuery():
+    def who(game, action):
+        response = model.generate_content(f"Who was the character that {action} in {game}?")
+        return response
 
+    def when(game, thing, inLore = "True"):
+        if inLore.lower() == "true":
+            response = model.generate_content(f"When did {thing} happen in {game}?", safety_settings={
+        HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_ONLY_HIGH,
+        HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_ONLY_HIGH,
+        HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_ONLY_HIGH,
+        HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: HarmBlockThreshold.BLOCK_ONLY_HIGH
+    })
+            return response
+        else:
+            response = model.generate_content(f"When was {thing} added to {game}?", safety_settings={
+        HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_ONLY_HIGH,
+        HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_ONLY_HIGH,
+        HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_ONLY_HIGH,
+        HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: HarmBlockThreshold.BLOCK_ONLY_HIGH
+    })
+            return response
 
 bot = commands.Bot(command_prefix='?', intents=discord.Intents.all())
 
@@ -89,6 +111,22 @@ async def search(interaction: discord.Interaction, game: str, topic: str):
     })
     rq.store(game, topic, response.text, result)
     await interaction.followup.send(f"Here's the lore on {topic}!\n{response.text}{result}")
+
+@bot.tree.command(name="whodunnit")
+@app_commands.describe(game = "What game or IP?", action = "What did they do?")
+async def who(interaction: discord.Interaction, game: str, action: str):
+    await interaction.response.defer()
+    await asyncio.sleep(3)
+    response = questionQuery.who(game, action)
+    await interaction.followup.send(f"**This is who I think {action}**\n{response.text}")
+
+@bot.tree.command(name="whendidithappen")
+@app_commands.describe(game = "What game or IP?", thing = "What thing are you asking about?", lore = "True/False")
+async def when(interaction: discord.Interaction, game: str, thing: str, lore: str):
+    await interaction.response.defer()
+    await asyncio.sleep(3)
+    response = questionQuery.when(game, thing, lore)
+    await interaction.followup.send(f"**This is what I think happened**\n{response.text}")
 
 @bot.tree.command(name="help")
 async def help(interaction: discord.Interaction):
