@@ -7,7 +7,6 @@ from History import requestHistory
 import requests
 import urllib3 as urllib
 from googlesearch import lucky as gsearch
-from bs4 import BeautifulSoup as BS
 from dotenv import load_dotenv
 import os
 import google.generativeai as genai
