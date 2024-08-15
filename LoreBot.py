@@ -55,7 +55,7 @@ class questionQuery():
 
     def when(game, thing, inLore = "True"):
         if inLore.lower() == "true":
-            response = model.generate_content(f"When did {thing} happen in {game}?", safety_settings={
+            response = model.generate_content(f"When did {thing} happen in {game}? 200 words or less.", safety_settings={
         HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_ONLY_HIGH,
         HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_ONLY_HIGH,
         HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_ONLY_HIGH,
@@ -63,7 +63,7 @@ class questionQuery():
     })
             return response
         else:
-            response = model.generate_content(f"When was {thing} added to {game}?", safety_settings={
+            response = model.generate_content(f"When was {thing} added to {game}? 200 words or less.", safety_settings={
         HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_ONLY_HIGH,
         HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_ONLY_HIGH,
         HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_ONLY_HIGH,
@@ -125,7 +125,11 @@ async def when(interaction: discord.Interaction, game: str, thing: str, lore: st
     await interaction.response.defer()
     await asyncio.sleep(3)
     response = questionQuery.when(game, thing, lore)
-    await interaction.followup.send(f"**This is what I think happened**\n{response.text}")
+    if lore.lower() != "true" or "false":
+        response = f"`lore:` **must be 'true' or 'false', not case sensitive.**"
+        await interaction.followup.send(response)
+    else:
+        await interaction.followup.send(f"**This is what I think happened**\n{response.text}")
 
 @bot.tree.command(name="help")
 async def help(interaction: discord.Interaction):
