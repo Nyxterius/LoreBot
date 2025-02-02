@@ -127,6 +127,19 @@ async def when(interaction: discord.Interaction, game: str, thing: str, lore: st
     response = questionQuery.when(game, thing, lore)
     await interaction.followup.send(f"**This is what I think happened**\n{response.text}")
 
+@bot.tree.command(name="lorelonger")
+@app_commands.describe(game = "What game or IP?", topic = "What topic did you have in mind?")
+async def lorelonger(interaction: discord.Interaction, game: str, topic: str):
+    await interaction.response.defer()
+    await asyncio.sleep(3)
+    response = model.generate_content(f"Provide an extensive summary of all lore on {topic} from {game} between 1000 and 1900 characters in length.", safety_settings={
+        HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_ONLY_HIGH,
+        HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_ONLY_HIGH,
+        HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_ONLY_HIGH,
+        HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: HarmBlockThreshold.BLOCK_ONLY_HIGH
+    })
+    await interaction.followup.send(f"Here's all of the lore I know on {topic}!\n{response.text}")
+
 @bot.tree.command(name="help")
 async def help(interaction: discord.Interaction):
     '''Sends usageString, contained in a different document called usage.txt'''

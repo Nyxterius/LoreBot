@@ -3,6 +3,10 @@ This is the help command for LoreBot
 **Search usage:**
 
 *search syntax - ```/search game: topic: ```*
+*lorelonger syntax - ```/lorelonger game: topic: ```*
+
+- search will provide a concise, general synopsis of the provided topic and a link to the wiki page for it.
+- lorelonger will give an extensive summary on any topic but without a link following.
 
 **Other Commands:**
 
