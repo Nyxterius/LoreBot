@@ -132,7 +132,7 @@ async def when(interaction: discord.Interaction, game: str, thing: str, lore: st
 async def lorelonger(interaction: discord.Interaction, game: str, topic: str):
     await interaction.response.defer()
     await asyncio.sleep(3)
-    response = model.generate_content(f"Provide an extensive summary of all lore on {topic} from {game} between 1000 and 1900 characters in length.", safety_settings={
+    response = model.generate_content(f"Provide a comprehensive summary of all lore on {topic} from {game} between 1000 and 1900 characters in length. Do not restate output length in response.", safety_settings={
         HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_ONLY_HIGH,
         HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_ONLY_HIGH,
         HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_ONLY_HIGH,
