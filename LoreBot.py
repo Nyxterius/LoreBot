@@ -47,7 +47,7 @@ class Searcher():
             result = gsearch(f"{game} {topic} wiki", tld='com', lang='en')
         data = requests.get(str(result))
         return data
-    
+
 class questionQuery():
     def who(game, action):
         response = model.generate_content(f"Who was the character that {action} in {game}?")
@@ -76,10 +76,10 @@ bot = commands.Bot(command_prefix='?', intents=discord.Intents.all())
 @bot.event
 async def on_ready():
     '''Completes instructions on start
-    
+
     The bot prints that it is working into the terminal output, lists the number of commands synced, or raises an exception if something went wrong.
     Changes presence to Streaming and a message to use the help command
-    
+
     '''
     print("Bot is workin")
     await bot.change_presence(activity=discord.Streaming(name="Use /help to learn how to search with LoreBot", url="https://en.uesp.net/wiki/Main_Page"))
@@ -93,9 +93,9 @@ async def on_ready():
 @app_commands.describe(game = "What game or IP to search for?", topic = "What topic did you have in mind?")
 async def search(interaction: discord.Interaction, game: str, topic: str):
     '''Searches for game and topic on google calling the Searcher class's query function, which uses the googlesearch module.
-    
+
     Also calls an implementation of Google's Gemini LLM to provide a brief synopsis on the topic.
-    
+
     Returns:
         A string containing the AI synopsis and url pulled from google
     '''
@@ -146,7 +146,7 @@ async def help(interaction: discord.Interaction):
     await interaction.response.send_message(usageString)
 
 @bot.tree.command(name="history")
-async def help(interaction: discord.Interaction):
+async def history(interaction: discord.Interaction):
     '''Sends cross-server request history! History list resets every 6 entries'''
     await interaction.response.send_message(rq.returnHistory())
 
