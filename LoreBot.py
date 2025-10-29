@@ -6,7 +6,7 @@ from discord.ext import commands
 from History import requestHistory
 import requests
 import urllib3 as urllib
-from googlesearch import lucky as gsearch
+from google import lucky as gsearch
 from dotenv import load_dotenv
 import os
 import google.generativeai as genai
