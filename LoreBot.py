@@ -101,7 +101,7 @@ async def search(interaction: discord.Interaction, game: str, topic: str):
     '''
     await interaction.response.defer()
     await Searcher.query(game, topic)
-    await asyncio.sleep(4)
+    await asyncio.sleep(3)
     response = model.generate_content(f"Give a general, approximately 30 word synopsis on {topic} from {game}.", safety_settings={
         HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_ONLY_HIGH,
         HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_ONLY_HIGH,
