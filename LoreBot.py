@@ -108,7 +108,7 @@ async def search(interaction: discord.Interaction, game: str, topic: str):
         HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_ONLY_HIGH,
         HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: HarmBlockThreshold.BLOCK_ONLY_HIGH
     })
-    rq.store(game, topic, response.text, result)
+    rq.store(game, topic, result)
     await interaction.followup.send(f"Here's the lore on {topic}!\n{response.text}{result}")
 
 @bot.tree.command(name="whodunnit")
