@@ -3,7 +3,7 @@ class requestHistory():
         self.histDict = {}
 
     def store(self, game, topic, result):
-        self.histDict[f"**{game}** *{topic}*"] = f"{result}"
+        self.histDict[f"{game} {topic}"] = f"{result}"
         print(self.histDict[f"{game} {topic}"])
         if len(self.histDict) > 6:
             self.histDict.clear()
@@ -13,5 +13,5 @@ class requestHistory():
         histList = []
         for i, j in self.histDict.items():
             counter += 1
-            histList.append(str(counter) + i + j)
+            histList.append(str(counter) + f"**{i}**" + j)
         return (histList)
