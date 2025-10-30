@@ -4,6 +4,7 @@ class requestHistory():
 
     def store(self, game, topic, response, result):
         self.histDict[f"{game} {topic}"] = f"{result}\n{response}"
+        print(self.histDict[f"{game} {topic}"])
         if len(self.histDict) > 6:
             self.histDict.clear()
 
@@ -11,6 +12,4 @@ class requestHistory():
         counter = 0
         for i, j in self.histDict:
             counter += 1
-            print(f"{counter} entries.")
-            print(i, j)
             return (str(counter) + i + j)
