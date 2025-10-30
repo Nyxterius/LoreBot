@@ -10,6 +10,8 @@ class requestHistory():
 
     def returnHistory(self):
         counter = 0
+        histList = []
         for i, j in self.histDict.items():
             counter += 1
-            return (str(counter) + i + j)
+            histList.append(str(counter) + i + j)
+            return (histList)
