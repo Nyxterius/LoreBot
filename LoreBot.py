@@ -6,7 +6,7 @@ from discord.ext import commands
 from History import requestHistory
 import requests
 import urllib3 as urllib
-from googlesearch import lucky as gsearch
+from ddgs import DDGS
 from dotenv import load_dotenv
 import os
 import google.generativeai as genai
@@ -40,13 +40,13 @@ class Searcher():
             result (str): url of the website
         '''
         global result
-        result = ""
+        results = {}
         if game.lower() == "the elder scrolls":
-            result = gsearch(f"{game} UESP {topic}", tld='com', lang='en')
+            results = DDGS().text(f"{game} UESP {topic}", region='us-en', safesearch='off', timelimit='y', page=1, backend="auto", max_results=1)
         else:
-            result = gsearch(f"{game} {topic} wiki", tld='com', lang='en')
-        data = requests.get(str(result))
-        return data
+            results = DDGS().text(f"{game} {topic} wiki", region='us-en', safesearch='off', timelimit='y', page=1, backend="auto", max_results=1)
+        result = results[0]['href']
+        return result
 
 class questionQuery():
     def who(game, action):
@@ -101,7 +101,7 @@ async def search(interaction: discord.Interaction, game: str, topic: str):
     '''
     await interaction.response.defer()
     await Searcher.query(game, topic)
-    await asyncio.sleep(3)
+    await asyncio.sleep(2)
     response = model.generate_content(f"Give a general, approximately 30 word synopsis on {topic} from {game}.", safety_settings={
         HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_ONLY_HIGH,
         HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_ONLY_HIGH,
