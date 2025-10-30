@@ -151,6 +151,6 @@ async def history(interaction: discord.Interaction):
     await interaction.response.defer()
     histResponse = rq.returnHistory()
     await asyncio.sleep(2)
-    await interaction.response.send_message(histResponse)
+    await interaction.followup.send(histResponse)
 
 bot.run(os.getenv('DISCORD_TOKEN'))
