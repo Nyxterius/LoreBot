@@ -13,5 +13,5 @@ class requestHistory():
         histList = []
         for i, j in self.histDict.items():
             counter += 1
-            histList.append(str(counter) + f"\n **{i}** " + j)
+            histList.append(str(counter) + f"\n **{i}** " + j + "\n")
         return (', '.join(histList))
