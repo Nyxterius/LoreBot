@@ -14,4 +14,4 @@ class requestHistory():
         for i, j in self.histDict.items():
             counter += 1
             histList.append(str(counter) + i + j)
-            return (histList)
+        return (histList)
