@@ -149,7 +149,8 @@ async def help(interaction: discord.Interaction):
 async def history(interaction: discord.Interaction):
     '''Sends cross-server request history! History list resets every 6 entries'''
     await interaction.response.defer()
+    histResponse = rq.returnHistory()
     await asyncio.sleep(2)
-    await interaction.response.send_message(rq.returnHistory())
+    await interaction.response.send_message(histResponse)
 
 bot.run(os.getenv('DISCORD_TOKEN'))
