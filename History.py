@@ -6,7 +6,6 @@ class requestHistory():
 
     def store(self, game, topic, response, result):
         self.histDict[f"{game} {topic}"] = f"{result}\n{response}"
-        self.fields.pop(0)
         if len(self.histDict) > 6:
             self.histDict.clear()
             self.countID = 1
