@@ -2,8 +2,8 @@ class requestHistory():
     def __init__(self):
         self.histDict = {}
 
-    def store(self, game, topic, response, result):
-        self.histDict[f"{game} {topic}"] = f"{result}\n{response}"
+    def store(self, game, topic, result):
+        self.histDict[f"**{game}** *{topic}*"] = f"{result}"
         print(self.histDict[f"{game} {topic}"])
         if len(self.histDict) > 6:
             self.histDict.clear()
