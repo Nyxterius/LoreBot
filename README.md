@@ -10,16 +10,14 @@ Required Libraries:
 - discord.py (obviously)
 - discord.ext
 - requests
-- urllib3
 - google
 - python-dotenv
 - google.generativeai
 
 You will need to create a discord developer application and retrieve its API key, as well as the API key for a Google Gemini service account.
 
-**The way it is set up currently, you can create an additional file in your directory called .env that contains the lines:**
+**The way it is set up currently, you can create an .env file that contains the lines:**
 DISCORD_TOKEN = ""
 GEMINI_API_KEY = ""
-*I would recommend adding .env to your .gitignore file, so that you don't leak your API keys*
 
 I wish you luck, I am a fellow learning dev :D
