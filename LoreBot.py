@@ -54,27 +54,23 @@ class Searcher():
 class questionQuery():
     def who(game, action):
         response = client.models.generate_content(
-		model = "gemini-3.1-flash-lite",
-		contents = f"Who was the character that {action} in {game}?",
+		    model = "gemini-3.5-flash",
+		    contents = f"Who was the character that {action} in {game}?",
 		)
         return response
 
     def when(game, thing, inLore = "True"):
         if inLore.lower() == "true":
-            response = model.generate_content(f"When did {thing} happen in/to {game}? 200 words or less.", safety_settings={
-        HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_ONLY_HIGH,
-        HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_ONLY_HIGH,
-        HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_ONLY_HIGH,
-        HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: HarmBlockThreshold.BLOCK_ONLY_HIGH
-    })
+            response = client.models.generate_content(
+		        model = "gemini-3.5-flash",
+		        contents = f"When did {thing} happen in/to {game}? 200 words or less.",
+		    )
             return response
         else:
-            response = model.generate_content(f"When was {thing} added to {game}? 200 words or less.", safety_settings={
-        HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_ONLY_HIGH,
-        HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_ONLY_HIGH,
-        HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_ONLY_HIGH,
-        HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: HarmBlockThreshold.BLOCK_ONLY_HIGH
-    })
+            response = client.models.generate_content(
+		        model = "gemini-3.5-flash",
+		        contents = f"When was {thing} added to {game}? 200 words or less.",
+            )
             return response
 
 bot = commands.Bot(command_prefix='?', intents=discord.Intents.all())
@@ -107,13 +103,11 @@ async def search(interaction: discord.Interaction, game: str, topic: str):
     '''
     await interaction.response.defer()
     await Searcher.query(game, topic)
-    await asyncio.sleep(2)
-    response = client.models.generate_content(f"Give a general, approximately 30 word synopsis on {topic} from {game}.", safety_settings={
-        HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_ONLY_HIGH,
-        HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_ONLY_HIGH,
-        HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_ONLY_HIGH,
-        HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: HarmBlockThreshold.BLOCK_ONLY_HIGH
-    })
+    await asyncio.sleep(4)
+    response = client.models.generate_content(
+		model = "gemini-3.5-flash",
+		contents = f"Give a general, approximately 30 word synopsis on {topic} from {game}.",
+	)
     rq.store(game, topic, result)
     await interaction.followup.send(f"Here's the lore on {topic}!\n{response.text}{result}")
 
@@ -129,7 +123,7 @@ async def who(interaction: discord.Interaction, game: str, action: str):
 @app_commands.describe(game = "What game or IP?", thing = "What thing are you asking about?", lore = "True/False")
 async def when(interaction: discord.Interaction, game: str, thing: str, lore: str):
     await interaction.response.defer()
-    await asyncio.sleep(3)
+    await asyncio.sleep(5)
     response = questionQuery.when(game, thing, lore)
     await interaction.followup.send(f"**This is what I think happened**\n{response.text}")
 
@@ -137,13 +131,11 @@ async def when(interaction: discord.Interaction, game: str, thing: str, lore: st
 @app_commands.describe(game = "What game or IP?", topic = "What topic did you have in mind?")
 async def lorelonger(interaction: discord.Interaction, game: str, topic: str):
     await interaction.response.defer()
-    await asyncio.sleep(3)
-    response = model.generate_content(f"Provide a comprehensive summary of all lore on {topic} from {game} between 1000 and 1900 characters in length. Do not restate output length in response.", safety_settings={
-        HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_ONLY_HIGH,
-        HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_ONLY_HIGH,
-        HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_ONLY_HIGH,
-        HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: HarmBlockThreshold.BLOCK_ONLY_HIGH
-    })
+    await asyncio.sleep(5)
+    response = client.models.generate_content(
+		model = "gemini-3.5-flash",
+		contents = f"Provide a comprehensive summary of all lore on {topic} from {game} between 1000 and 1900 characters in length. Do not restate output length in response.",
+	)
     await interaction.followup.send(f"Here's all of the lore I know on {topic}!\n{response.text}")
 
 @bot.tree.command(name="help")
