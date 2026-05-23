@@ -45,9 +45,9 @@ class Searcher():
         global result
         results = {}
         if game.lower() == "the elder scrolls":
-            results = DDGS().text(f"{game} UESP {topic}", region='us-en', safesearch='off', timelimit='y', page=1, backend="google", max_results=1)
+            results = DDGS().text(f"{game} UESP {topic}", region='us-en', safesearch='off', timelimit='y', page=1, backend="duckduckgo", max_results=1)
         else:
-            results = DDGS().text(f"{game} {topic} wiki", region='us-en', safesearch='off', timelimit='y', page=1, backend="google", max_results=1)
+            results = DDGS().text(f"{game} {topic} wiki", region='us-en', safesearch='off', timelimit='y', page=1, backend="duckduckgo", max_results=1)
         result = results[0]['href']
         return result
 
