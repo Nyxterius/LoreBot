@@ -10,9 +10,9 @@ Required Libraries:
 - discord.py (obviously)
 - discord.ext
 - requests
-- google
+- ddgs
 - python-dotenv
-- google.generativeai
+- google.genai
 
 You will need to create a discord developer application and retrieve its API key, as well as the API key for a Google Gemini service account.
 
