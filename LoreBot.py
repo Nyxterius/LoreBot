@@ -9,13 +9,16 @@ import urllib3 as urllib
 from ddgs import DDGS
 from dotenv import load_dotenv
 import os
-import google.generativeai as genai
-from google.generativeai.types import HarmCategory, HarmBlockThreshold
+from google import genai
+from google.genai import types
+from google.genai import Client
 import asyncio
 
 load_dotenv()
-genai.configure(api_key=os.getenv('GEMINI_API_KEY'))
-model = genai.GenerativeModel('gemini-2.0-flash-exp')
+
+googleClient = Client(
+	api_key = os.getenv('GEMINI_API_KEY')
+	)
 
 http = urllib.PoolManager()
 intents = discord.Intents(messages=True)
@@ -50,7 +53,10 @@ class Searcher():
 
 class questionQuery():
     def who(game, action):
-        response = model.generate_content(f"Who was the character that {action} in {game}?")
+        response = client.models.generate_content(
+		model = "gemini-3.1-flash-lite",
+		contents = f"Who was the character that {action} in {game}?",
+		)
         return response
 
     def when(game, thing, inLore = "True"):
@@ -102,7 +108,7 @@ async def search(interaction: discord.Interaction, game: str, topic: str):
     await interaction.response.defer()
     await Searcher.query(game, topic)
     await asyncio.sleep(2)
-    response = model.generate_content(f"Give a general, approximately 30 word synopsis on {topic} from {game}.", safety_settings={
+    response = client.models.generate_content(f"Give a general, approximately 30 word synopsis on {topic} from {game}.", safety_settings={
         HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_ONLY_HIGH,
         HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_ONLY_HIGH,
         HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_ONLY_HIGH,
@@ -115,7 +121,7 @@ async def search(interaction: discord.Interaction, game: str, topic: str):
 @app_commands.describe(game = "What game or IP?", action = "What did they do?")
 async def who(interaction: discord.Interaction, game: str, action: str):
     await interaction.response.defer()
-    await asyncio.sleep(3)
+    await asyncio.sleep(7)
     response = questionQuery.who(game, action)
     await interaction.followup.send(f"**This is who I think {action}**\n{response.text}")
 
