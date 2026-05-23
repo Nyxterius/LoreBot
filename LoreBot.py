@@ -16,7 +16,7 @@ import asyncio
 
 load_dotenv()
 
-googleClient = Client(
+googleClient = genai.Client(
 	api_key = os.getenv('GEMINI_API_KEY')
 	)
 
@@ -53,7 +53,7 @@ class Searcher():
 
 class questionQuery():
     def who(game, action):
-        response = client.models.generate_content(
+        response = googleClient.models.generate_content(
 		    model = "gemini-3.5-flash",
 		    contents = f"Who was the character that {action} in {game}?",
 		)
@@ -61,13 +61,13 @@ class questionQuery():
 
     def when(game, thing, inLore = "True"):
         if inLore.lower() == "true":
-            response = client.models.generate_content(
+            response = googleClient.models.generate_content(
 		        model = "gemini-3.5-flash",
 		        contents = f"When did {thing} happen in/to {game}? 200 words or less.",
 		    )
             return response
         else:
-            response = client.models.generate_content(
+            response = googleClient.models.generate_content(
 		        model = "gemini-3.5-flash",
 		        contents = f"When was {thing} added to {game}? 200 words or less.",
             )
@@ -104,7 +104,7 @@ async def search(interaction: discord.Interaction, game: str, topic: str):
     await interaction.response.defer()
     await Searcher.query(game, topic)
     await asyncio.sleep(4)
-    response = client.models.generate_content(
+    response = googleClient.models.generate_content(
 		model = "gemini-3.5-flash",
 		contents = f"Give a general, approximately 30 word synopsis on {topic} from {game}.",
 	)
@@ -132,7 +132,7 @@ async def when(interaction: discord.Interaction, game: str, thing: str, lore: st
 async def lorelonger(interaction: discord.Interaction, game: str, topic: str):
     await interaction.response.defer()
     await asyncio.sleep(5)
-    response = client.models.generate_content(
+    response = googleClient.models.generate_content(
 		model = "gemini-3.5-flash",
 		contents = f"Provide a comprehensive summary of all lore on {topic} from {game} between 1000 and 1900 characters in length. Do not restate output length in response.",
 	)
